@@ -1,7 +1,18 @@
 <!DOCTYPE html>
 <html>
-  <body style="width: 200px; padding: 10px;">
-    <button id="go">Click me</button>
+  <head>
+    <style>
+      body { width: 360px; padding: 12px; font-family: sans-serif; }
+      #go { padding: 6px 10px; cursor: pointer; }
+      #result { margin-top: 10px; max-height: 400px; overflow-y: auto; }
+      #result h2 { margin: 0 0 8px; font-size: 16px; color: #000; }
+      #result h3 { margin: 12px 0 3px; font-size: 14px; color: #111; }
+      #result p { margin: 0 0 8px; font-size: 13px; line-height: 1.4; color: #333; }
+    </style>
+  </head>
+  <body>
+    <button id="go">Summarize this page</button>
+    <div id="result"></div>
     <script src="popup.js"></script>
   </body>
 </html>
