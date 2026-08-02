@@ -7,7 +7,13 @@ document.getElementById("go").addEventListener("click", async () => {
     return;
   }
 
-  const text = await navigator.clipboard.readText();
+  // Grab all the visible text from the current page
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  const [{ result: text }] = await chrome.scripting.executeScript({
+    target: { tabId: tab.id },
+    func: () => document.body.innerText
+  });
+
   document.getElementById("go").textContent = "Summarizing...";
 
   const response = await fetch("https://api.anthropic.com/v1/messages", {
