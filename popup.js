@@ -52,6 +52,28 @@ document.getElementById("go").addEventListener("click", async () => {
 
   button.textContent = "Summarize this page";
   renderSummary(page.title, summary);
+
+  // Remember this summary so the "Save to .md" button can use it
+  lastSummary = { title: page.title, url: tab.url, text: summary };
+  document.getElementById("save").style.display = "inline-block";
+});
+
+let lastSummary = null;
+
+// Turn the summary into a Markdown file and download it
+document.getElementById("save").addEventListener("click", () => {
+  if (!lastSummary) return;
+  const { title, url, text } = lastSummary;
+
+  const markdown = "# " + (title || "TL;DR") + "\n\n" + "Source: [" + url + "](" + url + ")" + "\n\n" + text.trim() + "\n";
+  const fileName = (title || "tldr").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase() + ".md";
+
+  const blob = new Blob([markdown], { type: "text/markdown" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = fileName;
+  link.click();
+  URL.revokeObjectURL(link.href);
 });
 
 // Show the article title, then Claude's "## heading / sentence" summary as a tidy list

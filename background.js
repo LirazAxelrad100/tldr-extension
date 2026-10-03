@@ -89,10 +89,28 @@ function showPanel(title, text) {
   close.onclick = () => panel.remove();
   panel.appendChild(close);
 
+  // "Save to .md" button: turns the summary into a Markdown file and downloads it
+  const save = document.createElement("button");
+  save.textContent = "Save to .md";
+  save.style.cssText =
+    "position:absolute;top:8px;right:36px;border:1px solid #ccc;border-radius:4px;background:#f5f5f5;" +
+    "font-size:12px;padding:2px 8px;cursor:pointer;color:#333;";
+  save.onclick = () => {
+    const markdown = "# " + (title || "TL;DR") + "\n\n" + "Source: [" + location.href + "](" + location.href + ")" + "\n\n" + text.trim() + "\n";
+    const fileName = (title || "tldr").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase() + ".md";
+    const blob = new Blob([markdown], { type: "text/markdown" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  };
+  panel.appendChild(save);
+
   if (title) {
     const h = document.createElement("h2");
     h.textContent = title;
-    h.style.cssText = "margin:0 24px 8px 0;font-size:16px;color:#000;";
+    h.style.cssText = "margin:0 110px 8px 0;font-size:16px;color:#000;";
     panel.appendChild(h);
   }
 
